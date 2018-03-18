@@ -1,1 +1,3 @@
 # myoRecog
+
+This project is being developed by University Antonio Nariño with support of Innovacción Cauca and ...
