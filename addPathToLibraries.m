@@ -1,4 +1,4 @@
-function xaw_addPathToLibraries()
+function addPathToLibraries()
 
 sprintf('\nLoading toolbox dependencies\n');
 
