@@ -1,6 +1,6 @@
 %% load project configuration
 close all;
-config
+
 
 %%
 

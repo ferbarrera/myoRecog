@@ -1,6 +1,7 @@
 %% load project configuration
 close all;
 global COMPUTED_FEATURES_PATH 
+global COMPUTED_MODELS_PATH
 
 
 %% Script arguments
@@ -10,61 +11,52 @@ dataset_id = 1;
 subject_id = 1;
 exercise_id = 1:3;
 featureFncName = {'avgDicreteSignalPower'};
+svnKernel = 'RBF_kernel';
 featuresPath = COMPUTED_FEATURES_PATH{1};
-
+modelPath = COMPUTED_MODELS_PATH{1};
+experimentId = 'prueba';
 
 %% Function call
 
-numExercise = numel( exercise_id );
-numfeatureFncs = numel( featureFncName );
+% create directory
+[ subjetPath, modelPath ] = createModelDirStruct( modelPath, database_id, dataset_id, subject_id );
 
-Xc = cell( numExercise*numfeatureFncs, 1 );
-Yc = cell( numExercise*numfeatureFncs, 1 );
-i = 1;
-prevClassLabel = 0;
 
-for f = 1:numel( featureFncName )
-    for e = 1:numel( exercise_id )
-        [ Xtemp, Ytemp, currLastClasslabel ] = getTrainingData( featuresPath, featureFncName{ f }, database_id, dataset_id, subject_id, exercise_id( e ) );
-        
-        if i > 1
-            [ Xc{ i }, Yc{ i }, currLastClasslabel]= ajustClassIndexes( Xtemp, Ytemp, prevClassLabel, 1 );
-        else
-            Yc{ i } = Ytemp;
-            Xc{ i } = Xtemp;
-        end
-        
-        prevClassLabel = currLastClasslabel;
-        i = i + 1;
-    end
+[ XX, YY ] = getMultiFeaturesTrainingData( featuresPath, featureFncName, database_id, dataset_id, subject_id, exercise_id );
+
+for expRep = 1:20
+
+    X = XX;
+    Y = YY;
+    
+    % init model
+    model = initlssvm( X, Y, 'c', [], [], svnKernel);
+
+    % tuning parameters 
+    % -----------------
+    % optimization algorithms: simplex, gridsearch, linesearch 
+    % costfun: crossvalidatelssvm, leaveoneoutlssvm, rcrossvalidatelssvm and gcrossvalidatelssvm
+    %          crossvalidatelssvm: dataset is divided into L disjoint sets
+    %
+    model = tunelssvm( model, 'simplex', 'crossvalidatelssvm', {10,'misclass'}, 'code_OneVsAll' );
+
+    % train
+    model = trainlssvm( model );
+
+    % plot
+    % plotlssvm( model );
+
+    % simulate network
+    Ysim = simlssvm(model, X);
+
+    % remove misclasiffied
+    [ Y, Ysim ] = removeInvalidLabels( Y, Ysim );
+
+    % performance
+    cp = classperf( Y,Ysim );
+    [confusionMatrix, confusionMatrixOrder] = confusionmat(Y, Ysim);
+    
+    save( strcat(modelPath, filesep, experimentId, '_', num2str(expRep) ), 'database_id', 'dataset_id', 'subject_id', 'exercise_id', 'featureFncName', 'svnKernel', ...
+          'featuresPath', 'modelPath', 'cp', 'confusionMatrix', 'confusionMatrixOrder');
+
 end
-
-X = cell2mat( Xc );
-Y = cell2mat( Yc );
-
-model = initlssvm( X, Y, 'c', [], [], 'RBF_kernel');
-model = tunelssvm(model,'simplex','crossvalidatelssvm',{10,'misclass'},'code_OneVsAll');
-%model = tunelssvm( model, 'simplex','leaveoneoutlssvm', {'misclass'}, 'code_OneVsAll');
-
-% model = changelssvm(model, 'codetype', 'code_MOC');
-% model = changelssvm(model, 'codedist_fct', 'codedist_hamming');
-% model = codelssvm(model);
-
-model = trainlssvm( model );
-%plotlssvm( model );
-
-Yt = simlssvm(model, X);
-
-if ( (sum(isnan(Yt)) > 0) || (sum(isinf(Yt)) > 0))
-    mask = isinf(Yt) | isnan(Yt);
-    Yt(mask) = [];
-    Y(mask) = [];
-end
-
-cp = classperf(Y,Yt);
-
-[C,order] = confusionmat(Y, Yt);
-
-
-
-

@@ -1,8 +1,8 @@
-function [ pwr ] = avgDicreteSignalPower( signal )
+function [ feature ] = avgDicreteSignalPower( emg )
 %DISCRETESIGNALPOWER This function computes the power of a signal
 
-T = numel(signal);
-pwr = (1/T) * sum( signal.^2 );
+T = numel(emg);
+feature = (1/T) * sum( emg.^2 );
 
 end
 

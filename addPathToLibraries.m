@@ -20,6 +20,7 @@ global DATABASE_NAMES
 global DATABASE_PATH 
 global LS_SVM_PATH
 global COMPUTED_FEATURES_PATH 
+global COMPUTED_MODELS_PATH
 
 %database names
 DATABASE_NAMES{ 1 } = 'ninapro';
@@ -34,6 +35,10 @@ LS_SVM_PATH{ 1 } = '/Users/fernando/Documents/GitHub/LSSVMlabv1_8_R2009b_R2011a/
 
 % path to computed features
 COMPUTED_FEATURES_PATH{ 1 } = '/Users/fernando/emg_database/results_ninapro/';
+
+% path to computed models
+COMPUTED_MODELS_PATH{ 1 } = '/Users/fernando/emg_database/results_ninapro/';
+
 
 fprintf('\n\n');
 fprintf('Loading global variables ...OK');
