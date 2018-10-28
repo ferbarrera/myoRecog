@@ -12,7 +12,7 @@ emg_raw = getSEMG( s1 );
 % pre-processing
 lpf_coef = getLPFcoef( database_id, dataset_id );
 [ emg ] = applyFilter( lpf_coef, emg_raw );
-% plotSEMGsignals( emg, emg_filtered );
+% plotSEMGsignals( emg_raw, emg );
 
 % read stimulus vector
 stimulus = getStimulus( s1 );

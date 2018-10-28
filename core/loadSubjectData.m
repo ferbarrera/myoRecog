@@ -14,7 +14,7 @@ if isempty('NINAPRO_DATABASE_PATH')
 end
 
 filepath = strcat(DATABASE_PATH{database_id}, 'DB', num2str(dataset_id), filesep, 's', num2str(subject_id));
-filename = sprintf('S%d_A%d_E%d.mat', dataset_id, subject_id, exercise_id );
+filename = sprintf('S%d_A%d_E%d.mat', subject_id, 1, exercise_id );
 
 subjectData = load(strcat(filepath, filesep, filename));
 

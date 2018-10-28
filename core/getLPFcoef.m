@@ -15,7 +15,7 @@ switch database_id
                 fs = 100; % hz
                 fc = 3; % hz
                 fc_normalized = (2*fc)/fs;
-                fstop_normalized = fc_normalized * 1.20;
+                %fstop_normalized = fc_normalized * 1.20;
                 
                 d = designfilt('lowpassiir', 'FilterOrder',2, ...
                     'HalfPowerFrequency',fc, 'DesignMethod', 'butter', ...
@@ -23,6 +23,19 @@ switch database_id
         end
     
     case 2
+        switch dataset_id 
+            case 1
+                fs = 10; % hz
+                fc = 1; % hz
+                fc_normalized = (2*fc)/fs;
+
+                d = designfilt('lowpassiir', 'FilterOrder',2, ...
+                    'HalfPowerFrequency',fc, 'DesignMethod', 'butter', ...
+                    'SampleRate',fs);
+        end
+        
+    otherwise
+        fprinf('Update getLPFcoef function !!!!');
         
 end
 

@@ -10,7 +10,7 @@ sprintf('\nLoading toolbox dependencies\n');
 addpath( './classifier/LS-SVM/' );
 addpath( './classifier/' );
 addpath( './core/' );
-addpath( '../LSSVMlabv1_8_R2009b_R2011a/' );
+addpath( '../LSSVMlabv1_8_R2009b_R2011a/' ); % SVN
 addpath( './features/');
 addpath( './features/time/');
 
@@ -35,9 +35,11 @@ LS_SVM_PATH{ 1 } = '/Users/fernando/Documents/GitHub/LSSVMlabv1_8_R2009b_R2011a/
 
 % path to computed features
 COMPUTED_FEATURES_PATH{ 1 } = '/Users/fernando/emg_database/results_ninapro/';
+COMPUTED_FEATURES_PATH{ 2 } = '/Users/fernando/emg_database/results_uan_00/';
 
 % path to computed models
 COMPUTED_MODELS_PATH{ 1 } = '/Users/fernando/emg_database/results_ninapro/';
+COMPUTED_MODELS_PATH{ 2 } = '/Users/fernando/emg_database/results_uan_00/';
 
 
 fprintf('\n\n');

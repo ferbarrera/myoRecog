@@ -1,16 +1,18 @@
 %% load project configuration
+% this code computes a set of features for a given subject
+
 close all;
 global COMPUTED_FEATURES_PATH 
 
 
 %% Script arguments
 
-database_id = 1;
+database_id = 2;        % 1 ninapro, 2 uan_00
 dataset_id = 1;
 subject_id =1;
-exercise_id = 1:3;
-featureFncName = {'avgDicreteSignalPower'};
-resultsPath = COMPUTED_FEATURES_PATH{1};
+exercise_id = 2;        % 1, 2 or 3
+featureFncName = {'avgDicreteSignalPower'}; % list of features
+resultsPath = COMPUTED_FEATURES_PATH{database_id};
 
 %% Function call
 
