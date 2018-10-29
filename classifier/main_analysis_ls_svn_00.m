@@ -18,15 +18,17 @@ modelPath = COMPUTED_MODELS_PATH{database_id};
 % create directory structure for results
 [ subjetPath, computedModelToPath ] = getModelPath( modelPath, database_id, dataset_id, subject_id );
 
+% model error
 error = zeros(numExperiments, 1);
 
 for expRep = 1:numExperiments
     model = load( strcat(computedModelToPath, filesep, experimentId, '_', num2str(expRep) ) );
-    error(expRep) = model.cp.ErrorRate;
+    error(expRep) = model.cp.ClassifiedRate;	% Classified Samples / Total Number of Samples;
 end
 
 dev = std( error );
 avg = mean( error );
 
-
-fprintf(' error %2.4f +/- %2.4f\n', avg, dev);
+fprintf('*********************\n');
+fprintf(' Accuracy %2.2f +/- %2.2f (Classified Samples / Total Number of Samples)\n', avg*100, dev*100);
+fprintf('*********************\n');

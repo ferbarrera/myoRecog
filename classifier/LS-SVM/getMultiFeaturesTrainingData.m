@@ -6,25 +6,26 @@ function [ X, Y ] = getMultiFeaturesTrainingData( featuresPath, featureFncName, 
 numExercise = numel( exercise_id );
 numfeatureFncs = numel( featureFncName );
 
-Xc = cell( numExercise*numfeatureFncs, 1 );
-Yc = cell( numExercise*numfeatureFncs, 1 );
-i = 1;
+Xc = cell( numExercise, numfeatureFncs );
+Yc = cell( numExercise );
+%i = 1;
 prevClassLabel = 0;
 
-for f = 1:numel( featureFncName )
-    for e = 1:numel( exercise_id )
-        [ Xtemp, Ytemp, currLastClassLabel ] = getTrainingData( featuresPath, featureFncName{ f }, database_id, dataset_id, subject_id, exercise_id( e ) );
-        
-        if i > 1
-            [ Xc{ i }, Yc{ i }, currLastClassLabel]= ajustClassIndexes( Xtemp, Ytemp, prevClassLabel, 1 );
+for e = 1:numel( exercise_id )
+    for f = 1:numel( featureFncName )
+        [ Xtemp, Ytemp, currLastClassLabel ] = getTrainingData( featuresPath, featureFncName{ f }, ...
+            database_id, dataset_id, subject_id, exercise_id( e ) );
+    
+        if e>1
+            [ Xc{ e,f }, Yc{ e }, currLastClassLabel]= ajustClassIndexes( Xtemp, Ytemp, prevClassLabel, 1 );
         else
-            Yc{ i } = Ytemp;
-            Xc{ i } = Xtemp;
+            Xc{ e,f } = Xtemp;
+            Yc{ e } = Ytemp;
         end
-        
-        prevClassLabel = currLastClassLabel;
-        i = i + 1;
     end
+    
+    prevClassLabel = currLastClassLabel;
+    
 end
 
 X = cell2mat( Xc );

@@ -9,9 +9,9 @@ global COMPUTED_MODELS_PATH
 experimentId = 'prueba_uan';
 database_id = 1;
 dataset_id = 1;
-subject_id = 1;      % 1:numSubjects
-exercise_id = 1;
-featureFncName = {'avgDicreteSignalPower'};
+subject_id = 1:3;      % 1:numSubjects
+exercise_id = 1:2:3;
+featureFncName = {'avgDicreteSignalPower' 'integratedEmg'};
 svnKernel = 'RBF_kernel';
 numExperiments = 5;
 featuresPath = COMPUTED_FEATURES_PATH{database_id};
@@ -19,6 +19,12 @@ modelPath = COMPUTED_MODELS_PATH{database_id};
 
 
 %% Function call
+
+% model accuracy
+accuracyExperimentSubject = zeros(numExperiments, numel(subject_id));
+accuracySubject = zeros(numExperiments, 2);
+accuracyInterSubject = zeros( 1, 2);
+
 for s = subject_id
     
     % create directory structure for results
@@ -38,6 +44,21 @@ for s = subject_id
             'exercise_id', 'featureFncName', 'svnKernel', 'featuresPath', 'modelPath', ...
             'cp', 'confusionMatrix', 'confusionMatrixOrder', 'model', 'expRep');
         
+        accuracyExperimentSubject( expRep,s ) = cp.ClassifiedRate;	% Classified Samples / Total Number of Samples;
     end
     
+    accuracySubject( s,1 ) = mean( accuracyExperimentSubject( :,s ) );
+    accuracySubject( s,2 ) = std( accuracyExperimentSubject( :,s ) );
+    
 end
+
+accuracyInterSubject( 1,1 ) = mean( accuracyExperimentSubject(:) );
+accuracyInterSubject( 1,2 ) = std( accuracyExperimentSubject(:) );
+
+
+fprintf('********Accuracy report*************\n');
+for s = subject_id
+    fprintf('Subject = %d Accuracy %2.2f +/- %2.2f\n', s, accuracySubject( s,1 ), accuracySubject( s,2 ) );
+end
+
+fprintf('All Subjects Accuracy %2.2f +/- %2.2f\n', accuracyInterSubject( 1,1 ), accuracyInterSubject( 1,2 ) );
