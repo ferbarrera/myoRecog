@@ -18,4 +18,15 @@ filename = sprintf('S%d_A%d_E%d.mat', subject_id, 1, exercise_id );
 
 subjectData = load(strcat(filepath, filesep, filename));
 
+
+switch database_id
+    case 1   %ninpro
+        switch dataset_id
+            case 3
+                subjectData.emg = double( abs( subjectData.emg ) );
+            
+        end
+    
+end
+
 end

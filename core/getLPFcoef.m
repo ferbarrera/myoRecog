@@ -20,6 +20,15 @@ switch database_id
                 d = designfilt('lowpassiir', 'FilterOrder',2, ...
                     'HalfPowerFrequency',fc, 'DesignMethod', 'butter', ...
                     'SampleRate',fs);
+            case 3
+                fs = 100; % hz
+                fc = 3; % hz
+                fc_normalized = (2*fc)/fs;
+                %fstop_normalized = fc_normalized * 1.20;
+                
+                d = designfilt('lowpassiir', 'FilterOrder',2, ...
+                    'HalfPowerFrequency',fc, 'DesignMethod', 'butter', ...
+                    'SampleRate',fs);
         end
     
     case 2
