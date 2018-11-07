@@ -21,8 +21,8 @@ switch database_id
                     'HalfPowerFrequency',fc, 'DesignMethod', 'butter', ...
                     'SampleRate',fs);
             case 3
-                fs = 100; % hz
-                fc = 3; % hz
+                fs = 2000; % hz
+                fc = 100; % hz
                 fc_normalized = (2*fc)/fs;
                 %fstop_normalized = fc_normalized * 1.20;
                 

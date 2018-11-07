@@ -1,4 +1,4 @@
-function [ subjectData ] = loadSubjectData( database_id, dataset_id, subject_id, exercise_id )
+function [ subjectData, emg_raw, stimulus, repetition ] = loadSubjectData( database_id, dataset_id, subject_id, exercise_id )
 % LOADSUBJECTDATA read a subject data
 %   [subjectData] = LOADSUBJECTDATA(database_id, subject_id, exercise_id)
 %   read a subject data given a dataset_id, subject_id, and exercise_id
@@ -13,20 +13,62 @@ if isempty('NINAPRO_DATABASE_PATH')
     error('Error. \n NINAPRO_DATABASE_PATH does no exist, run config.m','');
 end
 
-filepath = strcat(DATABASE_PATH{database_id}, 'DB', num2str(dataset_id), filesep, 's', num2str(subject_id));
-filename = sprintf('S%d_A%d_E%d.mat', subject_id, 1, exercise_id );
 
-subjectData = load(strcat(filepath, filesep, filename));
+filepath = '';
+filename = '';
 
-
+% load mat file
 switch database_id
     case 1   %ninpro
         switch dataset_id
+            case 1
+                filepath = strcat(DATABASE_PATH{database_id}, 'DB', num2str(dataset_id), filesep, 's', num2str(subject_id));
+                filename = sprintf('S%d_A%d_E%d.mat', subject_id, 1, exercise_id );
+            case 2
+                filepath = strcat(DATABASE_PATH{database_id}, 'DB', num2str(dataset_id), filesep, 's', num2str(subject_id));
+                filename = sprintf('S%d_E%d_A%d.mat', exercise_id, 1, subject_id );
             case 3
-                subjectData.emg = double( abs( subjectData.emg ) );
+                % we rename .mat files following DB1 nomenclature
+                filepath = strcat(DATABASE_PATH{database_id}, 'DB', num2str(dataset_id), filesep, 's', num2str(subject_id));
+                filename = sprintf('S%d_A%d_E%d.mat', subject_id, 1, exercise_id );
             
         end
-    
 end
 
+subjectData = load( strcat(filepath, filesep, filename) );
+% debug here and execute dummy_plot()
+
+% get data from structure
+switch database_id
+    case 1   %ninpro
+        switch dataset_id
+            case 1
+                
+            case 2
+                emg_raw = double( abs( subjectData.emg ) );
+                stimulus = subjectData.restimulus;
+                repetition = subjectData.rerepetition;
+                
+            case 3
+                emg_raw = double( abs( subjectData.emg ) );
+                stimulus = subjectData.restimulus;
+                repetition = subjectData.repetition;
+        end
+end
+
+
+end
+
+function dummy_plot()
+    figure('Name', 'stimulus' ); hold on;
+    plot( 1000 * double( abs( subjectData.emg(1:200000,1) ) ) );
+    plot( subjectData.stimulus(1:200000), '-r' );
+    plot( subjectData.restimulus(1:200000) , '-b' );
+    legend('emg','stimulus', 'restimulus');
+    
+    figure('Name', 'repetition' ); hold on;
+    plot( 1000 * double( abs( subjectData.emg(1:200000,1) ) ) );
+    plot( subjectData.repetition(1:200000), '-r' );
+    plot( subjectData.rerepetition(1:200000), '-b' );
+    legend('emg','repetition', 'rerepetition');
 end

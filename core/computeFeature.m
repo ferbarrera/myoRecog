@@ -4,22 +4,17 @@ function [ rootOutputPath, outputDataPath ] = computeFeature( database_id, datas
 % load data
 
 % read a subject's data
-s1 = loadSubjectData( database_id, dataset_id, subject_id, exercise_id );
-
-% read emg
-emg_raw = getSEMG( s1 );
+[s1, emg_raw, stimulus, repetition ] = loadSubjectData( database_id, dataset_id, subject_id, exercise_id );
 
 % pre-processing
 lpf_coef = getLPFcoef( database_id, dataset_id );
 [ emg ] = applyFilter( lpf_coef, emg_raw );
-% plotSEMGsignals( emg_raw, emg );
-
-% read stimulus vector
-stimulus = getStimulus( s1 );
-
-% read repetition vector
-repetition = getRepetition( s1,2 );
-
+% plotSEMGsignals( emg_raw(:,1:2), emg(:,1:2) );
+%    figure('Name', 'stimulus' ); hold on;
+%    plot( 1000 * emg(1:200000,1) );
+%    plot( stimulus(1:200000), '-r' );
+%    plot( repetition(1:200000) , '-b' );
+%    legend('stimulus', 'restimulus');
 
 %% Compute feature
 
@@ -47,7 +42,7 @@ end
 
 % compute feature for repose
 for e = 1:numElectrodes
-    [ segment ] = extractEMGsegment( emg, stimulus, repetition, e, 0, 0 ); 
+    [ segment ] = extractEMGsegmentRepose( emg, stimulus, repetition, e, 0, 0 ); 
     featureVec = featureFncHandle( segment );
     
     for r = 1:numRepetitions        

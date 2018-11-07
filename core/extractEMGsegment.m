@@ -2,7 +2,6 @@ function [ segment ] = extractEMGsegment( EMG, stimulus_vec, repetition_vec, ele
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-
 % data masks
 maskStml = stimulus_vec == stimulus_id; 
 maskRep = repetition_vec == repetition_id;
