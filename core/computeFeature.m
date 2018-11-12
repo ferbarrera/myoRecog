@@ -10,6 +10,11 @@ function [ rootOutputPath, outputDataPath ] = computeFeature( database_id, datas
 lpf_coef = getLPFcoef( database_id, dataset_id );
 [ emg ] = applyFilter( lpf_coef, emg_raw );
 % plotSEMGsignals( emg_raw(:,1:2), emg(:,1:2) );
+%
+% figure('Name', 'filter' ); hold on; 
+% plot( emg(1:200000,1), '-r', 'LineWidth', 3 );
+% plot( emg_raw(1:200000,1), '-b' );
+%
 %    figure('Name', 'stimulus' ); hold on;
 %    plot( 1000 * emg(1:200000,1) );
 %    plot( stimulus(1:200000), '-r' );
@@ -31,8 +36,14 @@ for e = 1:numElectrodes
     for s = 1:numStimulus
         for r = 1:numRepetitions
             [ segment ] = extractEMGsegment( emg, stimulus, repetition, e, s, r ); 
-            featureVec = featureFncHandle( segment ); 
             
+            if ( numel(segment) < 10 )
+                [ segment ] = extractMaxEMGsegment( emg, stimulus, repetition, e, s, r ); 
+                fprintf('---> extracting max emg segment\n');
+            end
+            
+            %fprintf('---> size=%d e=%d s=%d r=%d\n', numel(segment), e, s, r);
+            featureVec = featureFncHandle( segment ); 
             features{s, r, e} = featureVec; %s+1 because the last entry is repose
         end
         

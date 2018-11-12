@@ -7,7 +7,7 @@ newLabel = max( Ygt ) + 1;
 mask = isinf(Y) | isnan(Y);
 Y(mask) = newLabel;
 
-fprintf('labels removed %s\n', num2str( sum(mask) ) );
+fprintf('Samples relabeled %d\n', sum(mask) );
 
 end
 
