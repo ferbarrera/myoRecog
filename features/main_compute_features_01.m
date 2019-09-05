@@ -8,7 +8,7 @@ global COMPUTED_FEATURES_PATH
 %% Script arguments
 
 database_id = 1;            % 1 ninapro, 2 uan_00
-dataset_id = 3;
+dataset_id = 1;
 subject_id = 1:11;          % subject index
 exercise_id = 1:3;          % 1, 2 or 3
 featureFncName = {'avgDicreteSignalPower' 'integratedEmg' 'meanAbsoluteValue' 'meanAbsoluteValueType1' 'meanAbsoluteValueType2'};
